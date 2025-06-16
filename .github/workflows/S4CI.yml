@@ -1,0 +1,25 @@
+# This is a basic workflow to help you get started with Actions
+
+
+name: Notification-push a ntfy.sh
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  notificar:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Obtener datos del commit
+        run: |
+          echo "COMMIT_URL=${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}" >> $GITHUB_ENV
+
+      - name: Enviar notificación a ntfy.sh
+        run: |
+          curl -H "Title: Push Completed" \
+               -H "Priority: 5" \
+               -d "El usuario ${{ github.actor }} ha subido cambios al repositorio ${{ github.repository }}. Revisa el commit aquí: ${{ env.COMMIT_URL }}" \
+               https://ntfy.sh/devops-itla
